@@ -35,6 +35,7 @@ export const updateCategory = async (id: number, categoryData: ICategory): Promi
          RETURNING *`,
         [categoryData.nome, categoryData.descricao, id]
     );
+
     return response.rows[0] as ICategory || null;
 };
 

@@ -15,8 +15,8 @@ export const findBookById = async (id: number): Promise<IBook | null> => {
 
 export const createBook = async (bookData: IBook): Promise<IBook> => {
     const response = await pool.query(
-        `INSERT INTO Livro (titulo, autor, isbn, editora, data_publicacao, numero_paginas, idioma, sinopse, capa, disponibilidade, preco, categoria_id, avaliacao_id) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) 
+        `INSERT INTO Livro (titulo, autor, isbn, editora, data_publicacao, numero_paginas, idioma, sinopse, capa, disponibilidade, preco, categoria_id) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
          RETURNING *`,
         [
             bookData.titulo,
@@ -31,7 +31,6 @@ export const createBook = async (bookData: IBook): Promise<IBook> => {
             bookData.disponibilidade,
             bookData.preco,
             bookData.categoria_id,
-            bookData.avaliacao_id
         ]
     );
     return response.rows[0] as IBook;
@@ -63,7 +62,7 @@ export const updateBook = async (id: number, bookData: IBook): Promise<IBook | n
     return response.rows[0] as IBook || null;
 };
 
-export const deleteBookById = async (id: number): Promise<void> => {
+export const deleteBook = async (id: number): Promise<void> => {
     await pool.query(`DELETE FROM Livro WHERE id = $1`, [id]);
 };
 
@@ -90,3 +89,20 @@ export const findBooksByAvailability = async (isAvailable: boolean): Promise<IBo
     const books = response.rows as IBook[];
     return books || [];
 };
+
+export const findBooksByUser = async (userId: number): Promise<IBook[]> => {
+    const response = await pool.query(
+        `SELECT l.* FROM Livro l 
+         JOIN Emprestimo e ON l.id = e.livro_id 
+         WHERE e.usuario_id = $1`, 
+        [userId]
+    );
+    const books = response.rows as IBook[];
+    return books || [];
+}
+
+export const findAvailableBooks = async (): Promise<IBook[]> => {
+    const response = await pool.query(`SELECT * FROM Livro WHERE disponibilidade = true`);
+    const books = response.rows as IBook[];
+    return books || [];
+}

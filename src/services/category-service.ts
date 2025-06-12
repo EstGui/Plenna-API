@@ -1,3 +1,4 @@
+import { ICategory } from "../models/category-model";
 import * as categoryRepository from "../repositories/category-repository";
 import { noContent, notFound, ok } from "../utils/http-helper"
 
@@ -26,11 +27,12 @@ export const getCategoryById = async (categoryId: number) => {
 
 export const createCategory = async (categoryData: any) => {
     const newCategory = {
-        id: Date.now(),
         ...categoryData,
         dataCadastro: new Date(),
         dataAtualizacao: new Date()
     };
+
+    await categoryRepository.createCategory(newCategory);
 
     return ok(newCategory);
 }
@@ -40,8 +42,9 @@ export const updateCategory = async (categoryId: number, categoryData: any) => {
     const updatedCategory = {
         id: categoryId,
         ...categoryData,
-        dataAtualizacao: new Date()
     };
+
+    await categoryRepository.updateCategory(categoryId, updatedCategory);
 
     return ok(updatedCategory);
 }

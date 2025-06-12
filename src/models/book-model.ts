@@ -12,5 +12,5 @@ export interface IBook {
     disponibilidade: boolean;
     preco: number | null;
     categoria_id: number | null;
-    avaliacao_id: number | null;
+    avaliacao_id?: number | null;
 }
