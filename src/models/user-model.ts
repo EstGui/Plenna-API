@@ -7,5 +7,4 @@ export interface IUser {
     telefone: string | null;
     dataCadastro: Date;
     dataAtualizacao: Date;
-    ultimoAcesso: Date | null;
 }

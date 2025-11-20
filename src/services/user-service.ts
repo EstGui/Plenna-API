@@ -46,8 +46,7 @@ export const createUser = async (userData: IUser) => {
     const newUser = {
         ...userData,
         dataCadastro: new Date(),
-        dataAtualizacao: new Date(),
-        ultimoAcesso: null
+        dataAtualizacao: new Date()
     };
 
     await userRepository.createUser(newUser);
@@ -60,8 +59,7 @@ export const updateUser = async (userId: number, userData: any) => {
     const updatedUser = {
         id: userId,
         ...userData,
-        dataAtualizacao: new Date(),
-        ultimoAcesso: null
+        dataAtualizacao: new Date()
     };
 
     await userRepository.updateUser(userId, updatedUser);

@@ -25,9 +25,7 @@ export const getBookById = async (bookId: number) => {
 
 export const createBook = async (bookData: IBook) => {
     const newBook = {
-        ...bookData,
-        data_cadastro: new Date(),
-        data_atualizacao: new Date()
+        ...bookData
     };
 
     await bookRepository.createBook(newBook);
@@ -37,8 +35,7 @@ export const createBook = async (bookData: IBook) => {
 
 export const updateBook = async (bookId: number, bookData: any) => {
     const updatedBook = {
-        ...bookData,
-        data_atualizacao: new Date()
+        ...bookData
     };
 
     await bookRepository.updateBook(bookId, updatedBook);
