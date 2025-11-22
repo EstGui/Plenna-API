@@ -3,6 +3,7 @@ import * as userController from "./controllers/user-controller";
 import * as bookController from "./controllers/book-controller";
 import * as categoryController from "./controllers/category-controller";
 import * as rateController from "./controllers/rate-controller";
+import { upload } from "./config/multer";
 
 const router = Router();
 
@@ -17,7 +18,8 @@ router.get("/user/email/:email", userController.getUserByEmail);
 // Define routes for book operations
 router.get("/books", bookController.getBooks);
 router.get("/book/:id", bookController.getBookById);
-router.post("/book", bookController.createBook);
+// router.post("/book", bookController.createBook);
+router.post("/book", upload.single("capa"), bookController.createBook);
 router.put("/book/:id", bookController.updateBook);
 router.delete("/book/:id", bookController.deleteBook);
 router.get("/books/category/:categoryId", bookController.getBooksByCategory);

@@ -1,6 +1,13 @@
 import { IBook } from "../models/book-model";
 import * as bookRepository from "../repositories/book-repository";
 import { noContent, notFound, ok } from "../utils/http-helper"
+import cloudinary from "../config/claudinary";
+
+
+interface ICreateBookInput {
+    bookData: IBook;
+    file?: Express.Multer.File | undefined;
+}
 
 
 export const getBooks = async () => {
@@ -23,15 +30,33 @@ export const getBookById = async (bookId: number) => {
     return response;
 }   
 
-export const createBook = async (bookData: IBook) => {
+export const createBook = async ({ bookData, file }: ICreateBookInput) => {
+    let imageUrl = null;
+
+    if (file) {
+        imageUrl = await new Promise<string>((resolve, reject) => {
+            const upload = cloudinary.uploader.upload_stream(
+                { folder: "books" },
+                (err: any, result: any) => {
+                    if (err) reject(err);
+                    else resolve(result!.secure_url);
+                }
+            );
+
+            upload.end(file.buffer);
+        });
+    }
+
     const newBook = {
-        ...bookData
+        ...bookData,
+        capa: imageUrl,
     };
 
     await bookRepository.createBook(newBook);
 
     return ok(newBook);
-}
+};
+
 
 export const updateBook = async (bookId: number, bookData: any) => {
     const updatedBook = {
@@ -122,4 +147,3 @@ export const getAvailableBooks = async () => {
 
     return response;
 };
-

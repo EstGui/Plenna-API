@@ -7,10 +7,11 @@ function CreateApp() {
     const app = express();
     
     app.use(cors({
-        origin: "*", // seu frontend
+        origin: "*",
         methods: ["GET", "POST", "PUT", "DELETE"],
-        credentials: true, // se precisar enviar cookies
+        credentials: true,
     }))
+    app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
     app.use("/api", router)
 

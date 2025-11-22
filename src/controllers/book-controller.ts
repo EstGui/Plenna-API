@@ -15,11 +15,20 @@ export const getBookById = async (req: Request, res: Response) => {
 };
 
 
-export const createBook = async (req: Request, res: Response) => {
-    const bookData = req.body;
-    const httpResponse = await bookService.createBook(bookData);
-    res.status(httpResponse.statusCode).json(httpResponse.body);
+export const createBook = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const result = await bookService.createBook({
+            bookData: {...req.body},
+            file: req.file
+        });
+
+        res.status(201).json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erro ao criar livro" });
+    }
 };
+
 
 
 export const updateBook = async (req: Request, res: Response) => {
